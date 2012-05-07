@@ -1,0 +1,5 @@
+Utilities written for my master thesis project. This may at best serve as an example ;)
+
+Reads all files (and subfiles) of a folder, and parses them with the Maltparser.
+
+
