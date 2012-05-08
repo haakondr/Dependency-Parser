@@ -1,4 +1,5 @@
 package plagiarism;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,49 +13,47 @@ import org.maltparser.core.exception.MaltChainedException;
 
 public class Parser {
 
-	private MaltParserService service;
+	private MaltParserService maltService;
 
-	public Parser(String params) {
+	public Parser(String maltparams) {
 		try {
-			service =  new MaltParserService();
-			service.initializeParserModel(params);
+			maltService =  new MaltParserService();
+			maltService.initializeParserModel(maltparams);
 		} catch (MaltChainedException e) {
 			e.printStackTrace();
-			System.out.println("Maltparser exception: "+ e.getMessage());
 		}
 	}
-
-	public String[] parseFile(String filename) {
-		List<String> lines;
+	
+	
+	public String[] processFile(String filename) {
 		try {
-			lines = Files.readAllLines(FileSystems.getDefault().getPath(filename), StandardCharsets.UTF_8);
-			return service.parseTokens(lines.toArray(new String[0]));
-
+			List<String> lines = Files.readAllLines(FileSystems.getDefault().getPath(filename), StandardCharsets.UTF_8);
+			return maltService.parseTokens((lines.toArray(new String[0])));
 		} catch (IOException | MaltChainedException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 
-	public void parseFiles(String dir, String baseDir) {
+	public void processFiles(String dir, String baseDir) {
 		File[] files = Utils.getFiles(dir);
-		
+
 		for (File file : files) {
 			String relativePath = new File(baseDir).toURI().relativize(file.toURI()).getPath();
 			if(file.isFile() && file.getName().endsWith(".txt")) {
 				System.out.println("Parsing file: "+file.getPath());
-				String[] parseData = parseFile(file.getPath());
+				processFile(file.getPath());
 				
-				System.out.println(relativePath);
+				String[] parseData = processFile(file.getPath());
+
 				Utils.writeToFile("data/out/"+relativePath, parseData);
 			}else if(file.isDirectory()) {
-				parseFiles(file.getPath(), baseDir);
+				processFiles(file.getPath(), baseDir);
 			}
 		}
 	}
-	
-	public void parseFiles(String dir) {
-		parseFiles(dir, dir);
+
+	public void processFiles(String dir) {
+		processFiles(dir, dir);
 	}
 }

@@ -11,7 +11,6 @@ import java.nio.file.StandardOpenOption;
 public class Utils {
 
     public static void writeToFile(String filename, String[] lines) {
-    	System.out.println("trying to write to:"+filename);
     	File f = new File(filename);
     	File parent = f.getParentFile();
     
