@@ -30,7 +30,9 @@ public class Parser {
 		try {
 			List<String> lines = Files.readAllLines(FileSystems.getDefault().getPath(filename), StandardCharsets.UTF_8);
 			tokens = maltService.parseTokens((lines.toArray(new String[0])));
-		} catch (IOException | MaltChainedException e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch(MaltChainedException e) {
 			e.printStackTrace();
 		}
 		
