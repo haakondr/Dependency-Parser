@@ -26,13 +26,15 @@ public class Parser {
 	
 	
 	public String[] processFile(String filename) {
+		String[] tokens = null;
 		try {
 			List<String> lines = Files.readAllLines(FileSystems.getDefault().getPath(filename), StandardCharsets.UTF_8);
-			return maltService.parseTokens((lines.toArray(new String[0])));
+			tokens = maltService.parseTokens((lines.toArray(new String[0])));
 		} catch (IOException | MaltChainedException e) {
 			e.printStackTrace();
 		}
-		return null;
+		
+		return tokens;
 	}
 
 	public void processFiles(String dir, String baseDir) {
@@ -42,7 +44,6 @@ public class Parser {
 			String relativePath = new File(baseDir).toURI().relativize(file.toURI()).getPath();
 			if(file.isFile() && file.getName().endsWith(".txt")) {
 				System.out.println("Parsing file: "+file.getPath());
-				processFile(file.getPath());
 				
 				String[] parseData = processFile(file.getPath());
 
