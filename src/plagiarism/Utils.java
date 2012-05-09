@@ -25,9 +25,9 @@ public class Utils {
 							StandardOpenOption.CREATE);
 			for (String line : lines) {
 				writer.write(line+"\n");
-
-				writer.flush();
+				
 			}
+			writer.close();
 		}catch ( IOException ioe ) {
 			ioe.printStackTrace();
 		}
