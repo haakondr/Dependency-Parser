@@ -34,7 +34,7 @@ public class Parser {
 		return tokens;
 	}
 
-	public void processFiles(String dir, String baseDir) {
+	public void processFiles(String dir, String baseDir, String outdir) {
 		File[] files = Utils.getFiles(dir);
 
 		for (File file : files) {
@@ -44,14 +44,14 @@ public class Parser {
 				
 				String[] parseData = processFile(file.getPath());
 
-				Utils.writeToFile("data/out/"+relativePath, parseData);
+				Utils.writeToFile(outdir+relativePath, parseData);
 			}else if(file.isDirectory()) {
 				processFiles(file.getPath(), baseDir);
 			}
 		}
 	}
 
-	public void processFiles(String dir) {
-		processFiles(dir, dir);
+	public void processFiles(String dir, String outdir) {
+		processFiles(dir, dir, outdir);
 	}
 }
