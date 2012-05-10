@@ -41,12 +41,10 @@ public class Parser {
 			String relativePath = new File(baseDir).toURI().relativize(file.toURI()).getPath();
 			if(file.isFile() && file.getName().endsWith(".txt")) {
 				System.out.println("Parsing file: "+file.getPath());
-				
 				String[] parseData = processFile(file.getPath());
-
 				Utils.writeToFile(outdir+relativePath, parseData);
 			}else if(file.isDirectory()) {
-				processFiles(file.getPath(), baseDir);
+				processFiles(file.getPath(), baseDir, outdir);
 			}
 		}
 	}
