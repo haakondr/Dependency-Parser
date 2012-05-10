@@ -28,10 +28,9 @@ public class Parser {
 	public String[] processFile(String filename) {
 		String[] tokens = null;
 		try {
-			List<String> lines = Files.readAllLines(FileSystems.getDefault().getPath(filename), StandardCharsets.UTF_8);
+//			List<String> lines = Files.readAllLines(FileSystems.getDefault().getPath(filename), StandardCharsets.UTF_8);
+			List<String> lines = Utils.readAllLines(filename);
 			tokens = maltService.parseTokens((lines.toArray(new String[0])));
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch(MaltChainedException e) {
 			e.printStackTrace();
 		}

@@ -1,11 +1,16 @@
 package plagiarism;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Utils {
@@ -18,14 +23,18 @@ public class Utils {
 			parent.mkdirs();
 		}
 		try {
-			BufferedWriter writer = 
-					Files.newBufferedWriter(
-							FileSystems.getDefault().getPath(".", filename), 
-							StandardCharsets.UTF_8, 
-							StandardOpenOption.CREATE);
+			//			BufferedWriter writer = 
+			//					Files.newBufferedWriter(
+			//							FileSystems.getDefault().getPath(".", filename), 
+			//							StandardCharsets.UTF_8, 
+			//							StandardOpenOption.CREATE);
+
+			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+
 			for (String line : lines) {
-				writer.write(line+"\n");
-				
+				writer.write(line);
+				writer.newLine();
+
 			}
 			writer.close();
 		}catch ( IOException ioe ) {
@@ -35,5 +44,25 @@ public class Utils {
 
 	public static File[] getFiles(String directory) {
 		return new File(directory).listFiles();
+	}
+
+	public static List<String> readAllLines(String filename) {
+		List<String> out = new ArrayList<String>();
+		try {
+			FileInputStream fstream = new FileInputStream(filename);
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String line = null;
+			 while ((line = br.readLine()) != null)   {
+			 	out.add(line);
+			 }
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return out;
+
 	}
 }
