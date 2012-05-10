@@ -1,10 +1,6 @@
 package plagiarism;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.util.List;
 
 import org.maltparser.MaltParserService;
