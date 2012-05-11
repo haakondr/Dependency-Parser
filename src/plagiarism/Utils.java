@@ -5,7 +5,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,12 +22,6 @@ public class Utils {
 			parent.mkdirs();
 		}
 		try {
-			//			BufferedWriter writer = 
-			//					Files.newBufferedWriter(
-			//							FileSystems.getDefault().getPath(".", filename), 
-			//							StandardCharsets.UTF_8, 
-			//							StandardOpenOption.CREATE);
-
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 
 			for (String line : lines) {

@@ -1,6 +1,8 @@
 package plagiarism;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.maltparser.MaltParserService;
@@ -22,16 +24,30 @@ public class Parser {
 	
 	
 	public String[] processFile(String filename) {
-		String[] tokens = null;
+		//TODO: write test verifying equal line numbers for input/output?
+		List<String> tokens = new ArrayList<String>();
 		try {
-//			List<String> lines = Files.readAllLines(FileSystems.getDefault().getPath(filename), StandardCharsets.UTF_8);
 			List<String> lines = Utils.readAllLines(filename);
-			tokens = maltService.parseTokens((lines.toArray(new String[0])));
+			List<String> sentence = new ArrayList<String>();
+			for (int i = 0; i < lines.size(); i++) {
+				
+				if(lines.get(i).startsWith("1\t")) {
+					if(sentence.size()>0) {
+						tokens.addAll(Arrays.asList(maltService.parseTokens(sentence.toArray(new String[0]))));
+					}
+					sentence.clear();
+				} 
+				sentence.add(lines.get(i));
+				
+				if(i == lines.size()-1) {
+					tokens.addAll(Arrays.asList(maltService.parseTokens(sentence.toArray(new String[0]))));
+				}
+			}
 		} catch(MaltChainedException e) {
 			e.printStackTrace();
 		}
 		
-		return tokens;
+		return tokens.toArray(new String[0]);
 	}
 
 	public void processFiles(String dir, String baseDir, String outdir) {
