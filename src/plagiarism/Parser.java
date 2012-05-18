@@ -1,55 +1,76 @@
 package plagiarism;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.TaggedWord;
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+
 
 public class Parser {
 
 	private MaltParserService maltService;
-
-	public Parser(String maltparams) {
+	private MaxentTagger tagger;
+	public Parser(String maltparams, String stanfordPosModel) {
 		try {
 			maltService =  new MaltParserService();
 			maltService.initializeParserModel(maltparams);
+			tagger = new MaxentTagger(stanfordPosModel);
 		} catch (MaltChainedException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	public String[] processFile(String filename) {
+
+	public String[] tagFile(String filename) {
 		//TODO: write test verifying equal line numbers for input/output?
-		List<String> tokens = new ArrayList<String>();
+		//TODO: introduce concurrency? processFile and Utils.writeToFile should run in separate threads.
+		List<String> taggedSentences = new ArrayList<String>();
+		
 		try {
-			List<String> lines = Utils.readAllLines(filename);
-			List<String> sentence = new ArrayList<String>();
-			for (int i = 0; i < lines.size(); i++) {
+			List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(filename)));
+			
+			
+			for (List<HasWord> sentence : sentences) {
+				ArrayList<TaggedWord> taggedSentence = tagger.tagSentence(sentence);
 				
-				if(lines.get(i).startsWith("1\t")) {
-					if(sentence.size()>0) {
-						tokens.addAll(Arrays.asList(maltService.parseTokens(sentence.toArray(new String[0]))));
-					}
-					sentence.clear();
-				} 
-				sentence.add(lines.get(i));
-				
-				if(i == lines.size()-1) {
-					tokens.addAll(Arrays.asList(maltService.parseTokens(sentence.toArray(new String[0]))));
+				int i = 1;
+				for (TaggedWord token : taggedSentence) {
+					taggedSentences.add(i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
+					i++;
 				}
 			}
-		} catch(MaltChainedException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		
-		return tokens.toArray(new String[0]);
+		return taggedSentences.toArray(new String[0]);
 	}
-
+	
+	public String[] processFile(String filename) {
+		String[] taggedLines = tagFile(filename);
+		
+		try {
+			return maltService.parseTokens(taggedLines);
+		} catch (MaltChainedException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	public void processFiles(String dir, String baseDir, String outdir) {
 		File[] files = Utils.getFiles(dir);
 

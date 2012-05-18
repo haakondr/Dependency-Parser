@@ -27,7 +27,6 @@ public class Utils {
 			for (String line : lines) {
 				writer.write(line);
 				writer.newLine();
-
 			}
 			writer.close();
 		}catch ( IOException ioe ) {
