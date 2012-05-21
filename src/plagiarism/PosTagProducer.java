@@ -21,10 +21,14 @@ public class PosTagProducer implements Runnable{
 	private PlagFile[] files;
 	private MaxentTagger tagger;
 
-	public PosTagProducer(BlockingQueue<POSFile> queue, PlagFile[] files, MaxentTagger tagger){
+	public PosTagProducer(BlockingQueue<POSFile> queue, PlagFile[] files, String taggerParams){
 		this.queue = queue;
 		this.files = files;
-		this.tagger = tagger;
+		try {
+			this.tagger = new MaxentTagger(taggerParams);
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
