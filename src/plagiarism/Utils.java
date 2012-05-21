@@ -62,14 +62,14 @@ public class Utils {
 
 	}
 
-	public static List<PlagFile> getTaskList(String dir, String baseDir, String outDir) {
+	public static List<PlagFile> getTaskList(String dir, String baseDir) {
 		List<PlagFile> tasks = new ArrayList<PlagFile>();
 
 		for (File file : Utils.getFiles(dir)) {
 			if(file.isFile() && file.getName().endsWith(".txt")) {
 				tasks.add(new PlagFile(file, baseDir));
 			}else if(file.isDirectory()) {
-				if(tasks.addAll(getTaskList(file.getPath(), baseDir, outDir))) {
+				if(tasks.addAll(getTaskList(file.getPath(), baseDir))) {
 					return tasks;
 				}
 			}
@@ -77,8 +77,8 @@ public class Utils {
 		return tasks;
 	}
 
-	public static PlagFile[] getTaskList(String dir, String outDir) {
-		return getTaskList(dir, dir, outDir).toArray(new PlagFile[0]);
+	public static PlagFile[] getTaskList(String dir) {
+		return getTaskList(dir, dir).toArray(new PlagFile[0]);
 	}
 
 	public static PlagFile[][] getChunks(PlagFile[] files, int n) {

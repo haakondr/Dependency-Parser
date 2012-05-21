@@ -11,9 +11,11 @@ public class PosTagConsumer implements Runnable {
 
 	private final TransferQueue<POSFile> queue;
 	private MaltParserService maltService;
+	private String outDir;
 	
-	public PosTagConsumer(TransferQueue<POSFile> queue, String maltParams) {
+	public PosTagConsumer(TransferQueue<POSFile> queue, String maltParams, String outDir) {
 		this.queue = queue;
+		this.outDir = outDir;
 		try {
 			this.maltService = new MaltParserService();
 			maltService.initializeParserModel(maltParams);
@@ -33,8 +35,9 @@ public class PosTagConsumer implements Runnable {
 		}
 		
 	}
-	public void consume(POSFile tfile) throws MaltChainedException {
-		maltService.parseTokens(tfile.getLines());
+	public void consume(POSFile posfile) throws MaltChainedException {
+		String[] parsedTokens = maltService.parseTokens(posfile.getLines());
+		Utils.writeToFile(outDir+posfile.getRelPath(), parsedTokens);
 	}
 
 }

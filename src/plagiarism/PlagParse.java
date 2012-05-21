@@ -12,11 +12,11 @@ public class PlagParse {
     public static void main(String[] args) {
 		
     	TransferQueue<POSFile> queue = new LinkedTransferQueue<>();
-    	PlagFile[] files = Utils.getTaskList(args[0], args[1]);
+    	PlagFile[] files = Utils.getTaskList(args[0]);
     	
     	
     	
-    	PosTagConsumer consumer  = new PosTagConsumer(queue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log");
+    	PosTagConsumer consumer  = new PosTagConsumer(queue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log", args[1]);
     	
     	int cpuCount = Runtime.getRuntime().availableProcessors();
     	int threadCount = (cpuCount < 4) ? 2 : cpuCount / 2;
