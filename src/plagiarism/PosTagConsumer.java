@@ -28,6 +28,7 @@ public class PosTagConsumer implements Runnable {
 	public void run() {
 		while(true) {
 			try {
+				
 				consume(queue.take());
 			} catch (InterruptedException | MaltChainedException e) {
 				e.printStackTrace();
@@ -36,6 +37,8 @@ public class PosTagConsumer implements Runnable {
 		
 	}
 	public void consume(POSFile posfile) throws MaltChainedException {
+		System.out.println("Consuming file "+posfile.getRelPath());
+		System.out.println("Currently "+queue.size()+" files ready to be consumed");
 		String[] parsedTokens = maltService.parseTokens(posfile.getLines());
 		Utils.writeToFile(outDir+posfile.getRelPath(), parsedTokens);
 	}
