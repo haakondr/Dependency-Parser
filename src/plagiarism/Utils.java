@@ -9,7 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import models.PlagFile;
 
 
 public class Utils {
@@ -38,6 +41,7 @@ public class Utils {
 		return new File(directory).listFiles();
 	}
 
+
 	public static List<String> readAllLines(String filename) {
 		List<String> out = new ArrayList<String>();
 		try {
@@ -45,16 +49,55 @@ public class Utils {
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String line = null;
-			 while ((line = br.readLine()) != null)   {
-			 	out.add(line);
-			 }
+			while ((line = br.readLine()) != null)   {
+				out.add(line);
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return out;
 
 	}
+
+	public static List<PlagFile> getTaskList(String dir, String baseDir, String outDir) {
+		List<PlagFile> tasks = new ArrayList<PlagFile>();
+
+		for (File file : Utils.getFiles(dir)) {
+			if(file.isFile() && file.getName().endsWith(".txt")) {
+				tasks.add(new PlagFile(file, baseDir));
+			}else if(file.isDirectory()) {
+				if(tasks.addAll(getTaskList(file.getPath(), baseDir, outDir))) {
+					return tasks;
+				}
+			}
+		}
+		return tasks;
+	}
+
+	public static PlagFile[] getTaskList(String dir, String outDir) {
+		return getTaskList(dir, dir, outDir).toArray(new PlagFile[0]);
+	}
+
+	public static PlagFile[][] getChunks(PlagFile[] files, int n) {
+		List<PlagFile[]> chunks = new ArrayList<>();
+
+		int fileCount = files.length;
+		int chunksize = fileCount / n;
+		int i = 0;
+		while(i < fileCount) {
+			if(i+chunksize*2 < fileCount) {
+				chunks.add(Arrays.copyOfRange(files, i, i+chunksize));
+				i += chunksize;
+			}else{
+				chunks.add(Arrays.copyOfRange(files, i, fileCount));
+				i = fileCount;
+			}
+		}
+
+		return chunks.toArray(new PlagFile[0][0]);
+	}
+
 }
