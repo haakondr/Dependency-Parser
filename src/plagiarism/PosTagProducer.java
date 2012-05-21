@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TransferQueue;
+import java.util.concurrent.BlockingQueue;
 
 import models.PlagFile;
 import models.POSFile;
@@ -17,11 +17,11 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class PosTagProducer implements Runnable{
 
-	private final TransferQueue<POSFile> queue;
+	private final BlockingQueue<POSFile> queue;
 	private PlagFile[] files;
 	private MaxentTagger tagger;
 
-	public PosTagProducer(TransferQueue<POSFile> queue, PlagFile[] files, String taggerParams){
+	public PosTagProducer(BlockingQueue<POSFile> queue, PlagFile[] files, String taggerParams){
 		this.queue = queue;
 		this.files = files;
 		try {
@@ -37,7 +37,7 @@ public class PosTagProducer implements Runnable{
 			String[] taggedFile = tagFile(file.getPath());
 
 			try {
-				queue.transfer(new POSFile(file.getRelPath(), taggedFile));
+				queue.put(new POSFile(file.getRelPath(), taggedFile));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

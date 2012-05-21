@@ -1,6 +1,6 @@
 package plagiarism;
 
-import java.util.concurrent.TransferQueue;
+import java.util.concurrent.BlockingQueue;
 
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
@@ -9,11 +9,11 @@ import models.POSFile;
 
 public class PosTagConsumer implements Runnable {
 
-	private final TransferQueue<POSFile> queue;
+	private final BlockingQueue<POSFile> queue;
 	private MaltParserService maltService;
 	private String outDir;
 	
-	public PosTagConsumer(TransferQueue<POSFile> queue, String maltParams, String outDir) {
+	public PosTagConsumer(BlockingQueue<POSFile> queue, String maltParams, String outDir) {
 		this.queue = queue;
 		this.outDir = outDir;
 		try {
@@ -28,7 +28,6 @@ public class PosTagConsumer implements Runnable {
 	public void run() {
 		while(true) {
 			try {
-				
 				consume(queue.take());
 			} catch (InterruptedException | MaltChainedException e) {
 				e.printStackTrace();

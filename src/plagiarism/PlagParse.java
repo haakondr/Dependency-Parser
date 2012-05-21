@@ -1,7 +1,7 @@
 package plagiarism;
 
-import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.TransferQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import models.PlagFile;
 import models.POSFile;
@@ -11,7 +11,7 @@ public class PlagParse {
 	  
     public static void main(String[] args) {
 		
-    	TransferQueue<POSFile> queue = new LinkedTransferQueue<>();
+    	BlockingQueue<POSFile> queue = new LinkedBlockingQueue<POSFile>();
     	PlagFile[] files = Utils.getTaskList(args[0]);
     	
     	
@@ -19,7 +19,7 @@ public class PlagParse {
     	PosTagConsumer consumer  = new PosTagConsumer(queue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log", args[1]);
     	
     	int cpuCount = Runtime.getRuntime().availableProcessors();
-    	int threadCount = (cpuCount < 4) ? 2 : cpuCount / 2;
+    	int threadCount = (cpuCount < 5) ? 2 : cpuCount - 3;
     	PlagFile[][] chunks = Utils.getChunks(files, threadCount);
     	System.out.println("thread count: "+threadCount+" chunks: "+chunks.length);
 
