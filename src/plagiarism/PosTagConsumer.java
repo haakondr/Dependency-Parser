@@ -37,6 +37,7 @@ public class PosTagConsumer implements Runnable {
 				e.printStackTrace();
 			} catch (NullPointerException e) {
 				System.out.println("Consumer timed out after 300 seconds with nothing from producer threads");
+				System.exit(0);
 			}
 		}
 
