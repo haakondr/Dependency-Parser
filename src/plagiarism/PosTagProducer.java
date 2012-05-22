@@ -36,10 +36,10 @@ public class PosTagProducer implements Runnable{
 		for (PlagFile file : files) {
 			
 			System.out.println(Thread.currentThread().getName()+" producing file "+file.getRelPath());
-			String[] taggedFile = tagFile(file.getPath());
+			POSFile taggedFile = tagFile(file);
 			System.out.println(Thread.currentThread().getName()+" done parsing file "+file.getRelPath());
 			try {
-				queue.put(new POSFile(file.getRelPath(), taggedFile));
+				queue.put(taggedFile);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -47,26 +47,28 @@ public class PosTagProducer implements Runnable{
 	}
 
 
-	public String[] tagFile(String filename) {
-		List<String> taggedSentences = new ArrayList<String>();
+	public POSFile tagFile(PlagFile file) {
+		POSFile taggedFile = new POSFile(file);
 
 		try {
-			List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(filename)));
+			List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(file.getPath())));
 
 			for (List<HasWord> sentence : sentences) {
-				ArrayList<TaggedWord> taggedSentence = tagger.tagSentence(sentence);
-
+				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence);
+				List<String> temp = new ArrayList<>();
+				
 				int i = 1;
 				for (TaggedWord token : taggedSentence) {
-					taggedSentences.add(i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
+					temp.add(i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
 					i++;
 				}
+				taggedFile.addSentence(temp.toArray(new String[0]));
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		return taggedSentences.toArray(new String[0]);
+		return taggedFile;
 	}
 
 }

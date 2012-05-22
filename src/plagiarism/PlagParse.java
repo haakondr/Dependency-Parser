@@ -21,7 +21,8 @@ public class PlagParse {
 
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		int threadCount = 1;
-		if(!(files.length < 10 || cpuCount < 4)) {
+		if((files.length > 10 && cpuCount > 4)) {
+			System.out.println(cpuCount);
 			threadCount = (cpuCount < 10) ? 2 : 10;
 		}
 		PlagFile[][] chunks = Utils.getChunks(files, threadCount);

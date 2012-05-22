@@ -1,21 +1,24 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class POSFile {
-	private String[] lines;
 	private String relPath;
+	private List<String[]> sentences;
 	
-	public POSFile(String relPath, String[] lines) {
-		this.relPath = relPath;
-		this.setLines(lines);
+	public POSFile(PlagFile file) {
+		this.relPath = file.getRelPath();
+		this.sentences = new ArrayList<>();
+	}
+	
+	public void addSentence(String[] tokens) {
+		sentences.add(tokens);
 	}
 
-	public String[] getLines() {
-		return lines;
-	}
-
-	public void setLines(String[] lines) {
-		this.lines = lines;
+	public List<String[]> getSentences() {
+		return sentences;
 	}
 
 	public String getRelPath() {
