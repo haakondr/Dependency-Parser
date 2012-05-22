@@ -33,7 +33,5 @@ public class PlagParse {
 		}
 
 		new Thread(consumer, "maltparserConsumer").start();
-
-
 	}
 }

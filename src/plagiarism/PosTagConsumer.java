@@ -1,6 +1,7 @@
 package plagiarism;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
@@ -28,14 +29,16 @@ public class PosTagConsumer implements Runnable {
 	public void run() {
 		while(true) {
 			try {
-				consume(queue.take());
+				consume(queue.poll(300, TimeUnit.SECONDS));
 			} catch (InterruptedException | MaltChainedException e) {
 				e.printStackTrace();
+			} catch (NullPointerException e) {
+				System.out.println("Consumer timed out after 300 seconds with nothing from producer threads");
 			}
 		}
 		
 	}
-	public void consume(POSFile posfile) throws MaltChainedException {
+	public void consume(POSFile posfile) throws MaltChainedException, NullPointerException {
 		System.out.println("Consuming file "+posfile.getRelPath());
 		System.out.println("Currently "+queue.size()+" files ready to be consumed");
 		String[] parsedTokens = maltService.parseTokens(posfile.getLines());
