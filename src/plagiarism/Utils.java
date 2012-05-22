@@ -80,6 +80,19 @@ public class Utils {
 	public static PlagFile[] getTaskList(String dir) {
 		return getTaskList(dir, dir).toArray(new PlagFile[0]);
 	}
+	
+	public static PlagFile[] getUnparsedFiles(String dir, String outDir) {
+		PlagFile[] files = getTaskList(dir);
+		List<PlagFile> out = new ArrayList<>();
+		for (PlagFile file : files) {
+			File outFile = new File(outDir+file.getRelPath());
+			if(!outFile.exists()) {
+				out.add(file);
+			}
+		}
+		
+		return out.toArray(new PlagFile[0]);
+	}
 
 	public static PlagFile[][] getChunks(PlagFile[] files, int n) {
 		List<PlagFile[]> chunks = new ArrayList<>();

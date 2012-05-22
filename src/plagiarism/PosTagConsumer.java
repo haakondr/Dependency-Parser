@@ -40,6 +40,7 @@ public class PosTagConsumer implements Runnable {
 		System.out.println("Currently "+queue.size()+" files ready to be consumed");
 		String[] parsedTokens = maltService.parseTokens(posfile.getLines());
 		Utils.writeToFile(outDir+posfile.getRelPath(), parsedTokens);
+		System.out.println("Done parsing file "+posfile.getRelPath());
 	}
 
 }

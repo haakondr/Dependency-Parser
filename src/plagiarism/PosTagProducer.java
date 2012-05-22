@@ -34,8 +34,9 @@ public class PosTagProducer implements Runnable{
 	@Override
 	public void run() {
 		for (PlagFile file : files) {
+			System.out.println("Producing file "+file.getRelPath());
 			String[] taggedFile = tagFile(file.getPath());
-
+			System.out.println("Done parsing file "+file.getRelPath());
 			try {
 				queue.put(new POSFile(file.getRelPath(), taggedFile));
 			} catch (InterruptedException e) {
