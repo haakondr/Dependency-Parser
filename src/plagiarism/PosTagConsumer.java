@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
@@ -32,11 +33,11 @@ public class PosTagConsumer implements Runnable {
 	public void run() {
 		while(true) {
 			try {
-				consume(queue.poll(300, TimeUnit.SECONDS));
+				consume(queue.poll(10000, TimeUnit.SECONDS));
 			} catch (InterruptedException | MaltChainedException e) {
 				e.printStackTrace();
 			} catch (NullPointerException e) {
-				System.out.println("Consumer timed out after 300 seconds with nothing from producer threads");
+				System.out.println("Consumer timed out after 10000 seconds with nothing from producer threads");
 				System.exit(0);
 			}
 		}
