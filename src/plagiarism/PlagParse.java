@@ -19,12 +19,12 @@ public class PlagParse {
 		PosTagConsumer consumer  = new PosTagConsumer(queue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log", args[1]);
 
 
-		int cpuCount = Runtime.getRuntime().availableProcessors();
-		int threadCount = 1;
-		if((files.length > 10 && cpuCount > 4)) {
-			System.out.println(cpuCount);
-			threadCount = (cpuCount < 10) ? 2 : 10;
-		}
+//		int cpuCount = Runtime.getRuntime().availableProcessors();
+		int threadCount = 2;
+//		if((files.length > 10 && cpuCount > 4)) {
+//			System.out.println(cpuCount);
+//			threadCount = (cpuCount < 10) ? 2 : 10;
+//		}
 		PlagFile[][] chunks = Utils.getChunks(files, threadCount);
 		System.out.println("thread count: "+threadCount+" chunks: "+chunks.length);
 
