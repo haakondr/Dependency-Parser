@@ -20,7 +20,7 @@ public class PlagParse {
 
 
 //		int cpuCount = Runtime.getRuntime().availableProcessors();
-		int threadCount = 2;
+		int threadCount = 1;
 //		if((files.length > 10 && cpuCount > 4)) {
 //			System.out.println(cpuCount);
 //			threadCount = (cpuCount < 10) ? 2 : 10;
