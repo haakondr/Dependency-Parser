@@ -29,7 +29,7 @@ public class PlagParse {
 		System.out.println("thread count: "+threadCount+" chunks: "+chunks.length);
 
 		for (int i = 0; i < threadCount; i++) {
-			PosTagProducer producer = new PosTagProducer(queue, chunks[i], "wsj-0-18-bidirectional-distsim.tagger");
+			PosTagProducer producer = new PosTagProducer(queue, chunks[i], "english-left3words-distsim.tagger");
 			new Thread(producer, "PosTagProducer: "+i).start();
 		}
 
